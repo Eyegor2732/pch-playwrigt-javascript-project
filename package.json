@@ -1,0 +1,17 @@
+{
+  "name": "pchpw",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "testCase": "npx plawright test --project=webkit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.48.1",
+    "@types/node": "^22.7.7",
+    "dotenv": "^16.4.5"
+  }
+}
