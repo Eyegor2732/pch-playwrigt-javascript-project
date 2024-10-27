@@ -17,29 +17,17 @@ class LoginPage extends BaseTest{
         this.letsgoBtn = page.getByText("LET'S GO");
     }
     
-    async launchAndSignIn() {
-        await this.setViewport(1700, 1200);
-        await this.goto('/weekly-grand-prize');
-        await this.checkPopUpAd();
-        await this.signinLink.click();
-        await this.emailInput.pressSequentially(process.env.EMAIL, {delay: 100});
-        await this.continueBtn.click();
-        await this.passwordInput.pressSequentially(process.env.PASSWORD, {delay: 100});
-        await this.signinBtn.click();
-        await this.letsgoBtn.click();
-    }
-
-    async launch() {
-        await this.setViewport(1700, 1200);
+    async launch(width, height) {
+        await this.setViewport(width, height);
         await this.goto('/weekly-grand-prize');
     }
 
-    async signIn() {
+    async signIn(email, password) {
         if(await this.signinLink.isEnabled()) {
             await this.signinLink.click();
-            await this.emailInput.pressSequentially(process.env.EMAIL, {delay: 100});
+            await this.emailInput.pressSequentially(email, {delay: 100});
             await this.continueBtn.click();
-            await this.passwordInput.pressSequentially(process.env.PASSWORD, {delay: 100});
+            await this.passwordInput.pressSequentially(password, {delay: 100});
             await this.signinBtn.click();
             await this.letsgoBtn.click();
         }

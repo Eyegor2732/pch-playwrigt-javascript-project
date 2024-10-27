@@ -1,24 +1,26 @@
 "use strict"
 
-const {test, expect} = require('@playwright/test');
+const {expect} = require('@playwright/test');
 const {PageObjectsManager} = require('../pageobjects/PageObjectManager');
+const {customtest} = require('../data/data.js');
 
-test.afterEach('Tear down each', async ({page}) => {
+customtest.afterEach('Tear down each', async ({page}) => {
   if(!page.isClosed()) await page.close();
 }); 
 
-test.afterAll('Tear down all', async ({browser}) => {
+customtest.afterAll('Tear down all', async ({browser}) => {
   if(browser.isConnected()) await browser.close(); 
 }); 
 
-test('Weekly Grand Prize', async ({ page }) => {
+customtest('Weekly Grand Prize', async ({ page, testData }) => {
   const poManager = new PageObjectsManager(page);
   const loginPage = poManager.getLoginPage();
   const purchasePage = poManager.getPurchasePage();
 
   // ========== Launch to the weekly sweepstakes page and Log In
-  await loginPage.launch();
-  await loginPage.signIn();
+
+  await loginPage.launch(testData.viewportWidth, testData.viewportHeight);
+  await loginPage.signIn(testData.email, testData.password);
   expect(await loginPage.signText()).toContain("Sign Out");
 
   // ========== Enter to sweepstake for the this week prize
