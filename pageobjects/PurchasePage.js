@@ -28,7 +28,7 @@ class PurchasePage extends BaseTest{
       for (let i = 0; i < count; i++) {
         await this.viewprizeBtn.nth(i).click();
         await this.enterLoop();
-        if (i < count) await this.goback();
+        await this.goback();
       }
     }
 

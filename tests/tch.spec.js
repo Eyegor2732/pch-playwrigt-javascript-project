@@ -18,8 +18,8 @@ customtest('Weekly Grand Prize', async ({ page, testData }) => {
   const purchasePage = poManager.getPurchasePage();
 
   // ========== Launch to the weekly sweepstakes page and Log In
-
-  await loginPage.launch(testData.viewportWidth, testData.viewportHeight);
+  // await loginPage.launch(testData.viewportWidth, testData.viewportHeight);
+  await loginPage.launch();
   await loginPage.signIn(testData.email, testData.password);
   expect(await loginPage.signText()).toContain("Sign Out");
 

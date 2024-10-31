@@ -4,9 +4,7 @@ exports.customtest = base.test.extend (
     {
         testData: {
             email : process.env.EMAIL,
-            password : process.env.PASSWORD,
-            viewportWidth : 1700,
-            viewportHeight : 1200
+            password : process.env.PASSWORD
         }
     }
 )

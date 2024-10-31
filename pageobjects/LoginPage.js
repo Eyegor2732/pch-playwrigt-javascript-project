@@ -16,10 +16,9 @@ class LoginPage extends BaseTest{
         this.signinBtn = page.locator('.btn.btn--login');
         this.letsgoBtn = page.getByText("LET'S GO");
     }
-    
-    async launch(width, height) {
-        await this.setViewport(width, height);
-        await this.goto('/weekly-grand-prize');
+
+    async launch(url='/weekly-grand-prize') {
+        await this.goto(url);
     }
 
     async signIn(email, password) {
