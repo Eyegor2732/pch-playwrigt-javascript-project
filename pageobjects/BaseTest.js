@@ -1,6 +1,6 @@
 "use strict";
 
-class BaseTest {
+export class BaseTest {
 
     constructor(page) {
         this.page = page;
@@ -15,5 +15,3 @@ class BaseTest {
     }
      
 }
-
-module.exports = {BaseTest};

@@ -29,7 +29,7 @@ module.exports = defineConfig({
     process.env.CI ? ['dot'] : ['list']
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  timeout: 10*30000,
+  timeout: 12*30000,
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://rewards.pch.com',
@@ -39,7 +39,7 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    headless: true,
+    headless: false,
   },
 
   /* Configure projects for major browsers */
@@ -57,7 +57,9 @@ module.exports = defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'],
-        viewport: { width: 1700, height: 1200 }
+        viewport: { width: 1700, height: 1200 },
+        ignoreHTTPSErrors: true,
+        permissions: ['geolocation']
        },
     },
 

@@ -1,8 +1,8 @@
 "use strict";
 
-const { BaseTest } = require("./BaseTest");
+import {BaseTest} from "./BaseTest";
 
-class LoginPage extends BaseTest{
+export class LoginPage extends BaseTest{
     
     constructor(page) {
         super(page);
@@ -23,17 +23,24 @@ class LoginPage extends BaseTest{
 
     async signIn(email, password) {
         if(await this.signinLink.isEnabled()) {
+            await this.signinLink.hover();
             await this.signinLink.click();
+            await this.emailInput.hover;
             await this.emailInput.pressSequentially(email, {delay: 100});
+            await this.continueBtn.hover();
             await this.continueBtn.click();
+            await this.passwordInput.hover;
             await this.passwordInput.pressSequentially(password, {delay: 100});
+            await this.signinBtn.hover();
             await this.signinBtn.click();
+            await this.letsgoBtn.hover();
             await this.letsgoBtn.click();
         }
     }
 
     async checkPopUpAd() {
         if (await this.popupCloseBtn.isVisible()) {
+            await this.popupCloseBtn.hover();
             await this.popupCloseBtn.click();
           }
     }
@@ -52,4 +59,3 @@ class LoginPage extends BaseTest{
 
 }
 
-module.exports = {LoginPage};

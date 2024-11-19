@@ -1,9 +1,9 @@
 "use strict";
 
-const {LoginPage} = require('./LoginPage');
-const {PurchasePage} = require('./PurchasePage');
+import {LoginPage} from './LoginPage';
+import {PurchasePage} from './PurchasePage';
 
-class PageObjectsManager {
+export class PageObjectsManager {
 
     constructor(page) {
         this.page = page;
@@ -21,4 +21,3 @@ class PageObjectsManager {
 
 }
 
-module.exports = {PageObjectsManager};
