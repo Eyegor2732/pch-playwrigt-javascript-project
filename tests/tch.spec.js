@@ -24,14 +24,14 @@ customtest('Weekly Grand Prize', async ({ page, testData }) => {
 
   // ========== Enter to sweepstake for the this week prize
   await purchasePage.submitThisweekPrize();
-  expect(await purchasePage.thisweekBtnText()).toContain("GET MORE");
+  expect.soft(await purchasePage.thisweekBtnText()).toContain("GET MORE");
 
   // ========== Enter to sweepstake for all other prizes, include Grand Prize
   const nextPrizesCount = await purchasePage.nextPrizesCount();
   await purchasePage.submitOtherPrizes();
   const nextPrizesLinkedCount = await purchasePage.nextPrizesLinkedCount();
-  expect(nextPrizesLinkedCount).toEqual(nextPrizesCount - 1);
-  expect(await purchasePage.isGrandPrizeComplete()).toBeTruthy();
+  expect.soft(nextPrizesLinkedCount).toEqual(nextPrizesCount - 1);
+  expect.soft(await purchasePage.isGrandPrizeComplete()).toBeTruthy();
 });
 
 
