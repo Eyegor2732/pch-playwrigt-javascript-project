@@ -7,45 +7,73 @@ export class PurchasePage extends BaseTest {
   constructor(page) {
     super(page);
     this.page = page;
-    this.viewprizeBtn = page.locator('//div[contains(@class,"view_prize-btn")]');
-    this.viewgrandprizeBtn = page.locator('//div[@class="view_prize-btn "]');
-    this.viewprizelinkedBtn = page.locator('div[class="view_prize-btn with-link"]');
+    this.viewprizeBtn = page.locator('.view-prize-btn');
     this.toastcloseBtn = page.locator('.toast-close');
     this.entriesremainingTitle = page.locator('span[class="num-remaining"]');
     this.entertowinBtn = page.getByRole('button').filter({ hasText: 'Enter To Win' });
     this.thisweekBtn = page.locator('.button-link');
-    this.grandprizedisabledBtn = page.locator('.button-link.disabled-cta');
     this.popupCloseBtn = page.getByRole('button').filter({ hasText: "LET'S GO" });
-  }
-
-  async submitThisweekPrize() {
-    if ((await this.thisweekBtn.textContent()).includes("LET'S GO")) {
-      await this.checkPopUp();
-      await this.thisweekBtn.hover();
-      await this.thisweekBtn.click();
-      await this.enterLoop();
-      await this.goback();
-    }
+    this.enteredAlreadyTitle = page.locator('.left-contents-title');
   }
 
   async checkPopUp() {
     if (await this.popupCloseBtn.isVisible()) {
       await this.popupCloseBtn.hover();
-      await this.popupCloseBtn.click();
+      await this.popupCloseBtn.focus();
+      await this.popupCloseBtn.dblclick();
     }
   }
 
-  async submitOtherPrizes() {
+  async launchWeekly(url = '/weekly-grand-prize') {
+    await this.goto(url);
+  }
+
+  async launch(url = 'https://pch.com') {
+    await this.goto(url);
+  }
+
+  async submitSuperPrize() {
+    await this.checkPopUp();
+    await this.viewprizeBtn.nth(0).waitFor();
+    await this.viewprizeBtn.nth(0).hover();
+    await this.viewprizeBtn.nth(0).click();
+    await this.entriesremainingTitle.waitFor();
+    if (((await this.entriesremainingTitle.innerText()).trim().split(" ")[0]) != "0") {
+      await this.enterLoop();
+    }
+    await this.checkPopUp();
+    // await this.launchWeekly();
+  }
+
+  async submitOtherPrizes(afterButtonColor) {
+    let result = 0;
     const count = await this.nextPrizesCount();
+
     for (let i = 0; i < count; i++) {
       await this.checkPopUp();
       await this.viewprizeBtn.nth(i).waitFor();
-      await this.viewprizeBtn.nth(i).hover();
-      await this.viewprizeBtn.nth(i).click();
-      await this.enterLoop();
-      await this.goback();
+
+      let backgroundColor = await this.viewprizeBtn.nth(i).evaluate((el) => {
+        return window.getComputedStyle(el).getPropertyValue('background-color');
+      });
+
+      if (backgroundColor != afterButtonColor) {
+        await this.viewprizeBtn.nth(i).hover();
+        await this.viewprizeBtn.nth(i).click();
+        await this.enterLoop();
+        await this.goback();
+      }
+
+      backgroundColor = await this.viewprizeBtn.nth(i).evaluate((el) => {
+        return window.getComputedStyle(el).getPropertyValue('background-color');
+      });
+
+      if (backgroundColor == afterButtonColor) {
+        result++;
+      }
     }
     await this.checkPopUp();
+    return count == result;
   }
 
   async enterLoop() {
@@ -63,19 +91,18 @@ export class PurchasePage extends BaseTest {
     return (await this.viewprizeBtn.all()).length;
   }
 
-  async nextPrizesLinkedCount() {
-    await this.viewprizelinkedBtn.nth(1).waitFor();
-    return (await this.viewprizelinkedBtn.all()).length;
-  }
-
-  async thisweekBtnText() {
-    return (await this.thisweekBtn.textContent());
-  }
-
-  async isGrandPrizeComplete() {
-    await this.viewgrandprizeBtn.hover();
-    await this.viewgrandprizeBtn.click();
+  async isSuperPrizeComplete() {
+    let result = false;
+    await this.launch();
+    await this.viewprizeBtn.nth(0).waitFor();
+    await this.viewprizeBtn.nth(0).hover();
+    await this.viewprizeBtn.nth(0).click();
     await this.entriesremainingTitle.waitFor();
-    return (parseInt((await this.entriesremainingTitle.innerText()).trim().split(" ")[0]) == 0);
+    if ((await this.entriesremainingTitle.innerText()).trim().split(" ")[0] == "0") {
+      result = true;
+    }
+    await this.launchWeekly();
+    return result;
   }
+
 }

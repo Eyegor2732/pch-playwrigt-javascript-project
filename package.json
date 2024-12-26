@@ -10,8 +10,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/test": "^1.48.1",
+    "@playwright/test": "^1.49.1",
     "@types/node": "^22.7.7",
+    "allure-playwright": "^3.0.7",
     "dotenv": "^16.4.5"
   }
 }

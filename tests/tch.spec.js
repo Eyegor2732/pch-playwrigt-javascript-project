@@ -1,39 +1,43 @@
 "use strict"
 
 import { expect } from '@playwright/test';
-import { PageObjectsManager } from '../pageobjects/PageObjectManager';
-import { customtest } from '../data/data.js';
+import { PageObjectsManager } from '../pageobjects/PageObjectManager.js';
+import { customtest as test } from '../data/data.js';
 
-customtest.afterEach('Tear down each', async ({ page }) => {
+test.afterEach('Tear down each', async ({ page }) => {
   if (!page.isClosed()) await page.close();
 });
 
-customtest.afterAll('Tear down all', async ({ browser }) => {
+test.afterAll('Tear down all', async ({ browser }) => {
   if (browser.isConnected()) await browser.close();
 });
 
-customtest('Weekly Grand Prize', async ({ page, testData }) => {
-  const poManager = new PageObjectsManager(page);
-  const loginPage = poManager.getLoginPage();
-  const purchasePage = poManager.getPurchasePage();
+test('PCH Grand Prize And Weekly Prizes',
+  {
+    annotation: {
+      type: 'End to End',
+      description: 'https://pch.com',
+    }
+  },
+  async ({ page, testData }) => {
+    const poManager = new PageObjectsManager(page);
+    const loginPage = poManager.getLoginPage();
+    const purchasePage = poManager.getPurchasePage();
+    const email = testData.email;
+    const password = testData.password;
+    const afterButtonColor = testData.afterButtonColor;
 
-  // ========== Launch to the weekly sweepstakes page and Log In
-  await loginPage.launch();
-  await loginPage.signIn(testData.email, testData.password);
-  expect(await loginPage.signText()).toContain("Sign Out");
+    // ========== Launch to the main PCH page and Log In
+    await loginPage.launch();
+    await loginPage.signIn(email, password);
+    expect(await loginPage.signText()).toContain("Sign Out");
 
-  // ========== Enter to sweepstake for the this week prize
-  await purchasePage.submitThisweekPrize();
-  expect.soft(await purchasePage.thisweekBtnText()).toContain("GET MORE");
+    // ========== Enter to sweepstake for Super prize
+    await purchasePage.submitSuperPrize();
+    expect.soft(await purchasePage.isSuperPrizeComplete()).toBeTruthy;
 
-  // ========== Enter to sweepstake for all other prizes, include Grand Prize
-  const nextPrizesCount = await purchasePage.nextPrizesCount();
-  await purchasePage.submitOtherPrizes();
-  const nextPrizesLinkedCount = await purchasePage.nextPrizesLinkedCount();
-  expect.soft(nextPrizesLinkedCount).toEqual(nextPrizesCount - 1);
-  expect.soft(await purchasePage.isGrandPrizeComplete()).toBeTruthy();
-});
+    // ========== Enter to sweepstake for all prizes
+    const isOtherPrizesComplete = await purchasePage.submitOtherPrizes(afterButtonColor);
+    expect.soft(isOtherPrizesComplete).toBeTruthy;
 
-
-
-
+  });

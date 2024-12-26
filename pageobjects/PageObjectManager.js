@@ -1,7 +1,7 @@
 "use strict";
 
-import {LoginPage} from './LoginPage';
-import {PurchasePage} from './PurchasePage';
+import { LoginPage } from './LoginPage';
+import { PurchasePage } from './PurchasePage';
 
 export class PageObjectsManager {
 

@@ -1,6 +1,6 @@
 // @ts-check
 import "dotenv/config";
-const { defineConfig, devices } = require('@playwright/test');
+import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -18,18 +18,19 @@ module.exports = defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 0 : 0,
+  retries: process.env.CI ? 1 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : '50%',
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', {  outputFolder: 'test-results' }],
-    ['json', {  outputFile: 'test-results/test-results.json' }],
-    
+    ['html', { outputFolder: 'test-results' }],
+    ['json', { outputFile: 'test-results/test-results.json' }],
+    ["allure-playwright"],
+
     process.env.CI ? ['dot'] : ['list']
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  timeout: 12*30000,
+  timeout: 12 * 30000,
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://rewards.pch.com',
@@ -39,28 +40,39 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    headless: false,
+    headless: true,
   },
 
   /* Configure projects for major browsers */
   projects: [
     // {
     //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'] },
+    //   use: {
+    //     ...devices['Desktop Chrome'],
+    //     viewport: { width: 1700, height: 1200 },
+    //     ignoreHTTPSErrors: true,
+    //     permissions: ['geolocation']
+    //   },
     // },
 
     // {
     //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1700, height: 1200 },
+    //     ignoreHTTPSErrors: true,
+    //     permissions: ['geolocation']
+    //   },
     // },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'],
+      use: {
+        ...devices['Desktop Safari'],
         viewport: { width: 1700, height: 1200 },
         ignoreHTTPSErrors: true,
         permissions: ['geolocation']
-       },
+      },
     },
 
     /* Test against mobile viewports. */

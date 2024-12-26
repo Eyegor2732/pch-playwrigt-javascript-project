@@ -8,10 +8,11 @@ export class BaseTest {
 
     async goto(url) {
         await this.page.goto(url);
+        await this.page.waitForTimeout(1000);
     }
 
     async goback() {
         await this.page.goBack();
     }
-     
+
 }
