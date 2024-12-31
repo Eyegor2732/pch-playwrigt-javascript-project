@@ -14,5 +14,8 @@
     "@types/node": "^22.7.7",
     "allure-playwright": "^3.0.7",
     "dotenv": "^16.4.5"
+  },
+  "dependencies": {
+    "npm": "^11.0.0"
   }
 }

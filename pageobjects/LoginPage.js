@@ -13,7 +13,7 @@ export class LoginPage extends BaseTest {
         this.emailInput = page.getByPlaceholder('Email Address');
         this.continueBtn = page.getByText('CONTINUE');
         this.passwordInput = page.getByPlaceholder('Verify Password');
-        this.signinBtn = page.locator('.btn.btn--login');
+        this.signinBtn = page.getByRole('button', { name: 'SIGN IN' });
         this.letsgoBtn = page.getByText("LET'S GO");
     }
 

@@ -7,20 +7,19 @@ export class PurchasePage extends BaseTest {
   constructor(page) {
     super(page);
     this.page = page;
-    this.viewprizeBtn = page.locator('.view-prize-btn');
+    this.viewprizeBtn = page.getByText('VIEW PRIZE');
     this.toastcloseBtn = page.locator('.toast-close');
-    this.entriesremainingTitle = page.locator('span[class="num-remaining"]');
+    this.entriesremainingTitle = page.locator('.entryRemaining_banner');
     this.entertowinBtn = page.getByRole('button').filter({ hasText: 'Enter To Win' });
-    this.thisweekBtn = page.locator('.button-link');
     this.popupCloseBtn = page.getByRole('button').filter({ hasText: "LET'S GO" });
-    this.enteredAlreadyTitle = page.locator('.left-contents-title');
+    this.nextentryBtn = page.getByText('NEXT ENTRY');
   }
 
   async checkPopUp() {
     if (await this.popupCloseBtn.isVisible()) {
       await this.popupCloseBtn.hover();
       await this.popupCloseBtn.focus();
-      await this.popupCloseBtn.dblclick();
+      await this.popupCloseBtn.click();
     }
   }
 
@@ -38,9 +37,11 @@ export class PurchasePage extends BaseTest {
     await this.viewprizeBtn.nth(0).hover();
     await this.viewprizeBtn.nth(0).click();
     await this.entriesremainingTitle.waitFor();
-    if (((await this.entriesremainingTitle.innerText()).trim().split(" ")[0]) != "0") {
+
+    if (!(await this.nextentryBtn.isVisible())) {
       await this.enterLoop();
     }
+
     await this.checkPopUp();
     // await this.launchWeekly();
   }
@@ -78,7 +79,7 @@ export class PurchasePage extends BaseTest {
 
   async enterLoop() {
     await this.entriesremainingTitle.waitFor();
-    while (parseInt((await this.entriesremainingTitle.innerHTML()).trim().split(" ")[0]) != 1) {
+    while ((await this.entriesremainingTitle.textContent()).trim().split(" ")[0] != "1") {
       await this.entertowinBtn.hover();
       await this.entertowinBtn.click();
       await this.toastcloseBtn.hover();
@@ -98,7 +99,8 @@ export class PurchasePage extends BaseTest {
     await this.viewprizeBtn.nth(0).hover();
     await this.viewprizeBtn.nth(0).click();
     await this.entriesremainingTitle.waitFor();
-    if ((await this.entriesremainingTitle.innerText()).trim().split(" ")[0] == "0") {
+
+    if (await this.nextentryBtn.isVisible()) {
       result = true;
     }
     await this.launchWeekly();

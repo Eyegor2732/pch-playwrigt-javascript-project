@@ -36,7 +36,7 @@ test('PCH Grand Prize And Weekly Prizes',
     await purchasePage.submitSuperPrize();
     expect.soft(await purchasePage.isSuperPrizeComplete()).toBeTruthy;
 
-    // ========== Enter to sweepstake for all prizes
+    // ========== Enter to sweepstake for all weekly prizes
     const isOtherPrizesComplete = await purchasePage.submitOtherPrizes(afterButtonColor);
     expect.soft(isOtherPrizesComplete).toBeTruthy;
 
