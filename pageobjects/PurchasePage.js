@@ -32,6 +32,7 @@ export class PurchasePage extends BaseTest {
   }
 
   async submitSuperPrize() {
+    await this.launch();
     await this.checkPopUp();
     await this.viewprizeBtn.nth(0).waitFor();
     await this.viewprizeBtn.nth(0).hover();
@@ -42,11 +43,13 @@ export class PurchasePage extends BaseTest {
       await this.enterLoop();
     }
 
+    await this.launch();//await this.goback();
     await this.checkPopUp();
     // await this.launchWeekly();
   }
 
   async submitOtherPrizes(afterButtonColor) {
+    await this.launchWeekly();
     let result = 0;
     const count = await this.nextPrizesCount();
 
@@ -62,7 +65,7 @@ export class PurchasePage extends BaseTest {
         await this.viewprizeBtn.nth(i).hover();
         await this.viewprizeBtn.nth(i).click();
         await this.enterLoop();
-        await this.goback();
+        await this.launchWeekly();
       }
 
       backgroundColor = await this.viewprizeBtn.nth(i).evaluate((el) => {
@@ -94,7 +97,6 @@ export class PurchasePage extends BaseTest {
 
   async isSuperPrizeComplete() {
     let result = false;
-    await this.launch();
     await this.viewprizeBtn.nth(0).waitFor();
     await this.viewprizeBtn.nth(0).hover();
     await this.viewprizeBtn.nth(0).click();
@@ -103,7 +105,6 @@ export class PurchasePage extends BaseTest {
     if (await this.nextentryBtn.isVisible()) {
       result = true;
     }
-    await this.launchWeekly();
     return result;
   }
 

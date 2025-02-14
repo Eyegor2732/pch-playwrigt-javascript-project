@@ -3,41 +3,50 @@
 import { expect } from '@playwright/test';
 import { PageObjectsManager } from '../pageobjects/PageObjectManager.js';
 import { customtest as test } from '../data/data.js';
+import fs from "node:fs/promises";
 
-test.afterEach('Tear down each', async ({ page }) => {
-  if (!page.isClosed()) await page.close();
-});
+test.describe('End To End', () => {
 
-test.afterAll('Tear down all', async ({ browser }) => {
-  if (browser.isConnected()) await browser.close();
-});
+  test.afterAll('Tear down all', async ({ browser, testData }) => {
+    // erase all data from authFile
+    await fs.truncate(testData.authFile, 0);
 
-test('PCH Grand Prize And Weekly Prizes',
-  {
-    annotation: {
-      type: 'End to End',
-      description: 'https://pch.com',
-    }
-  },
-  async ({ page, testData }) => {
-    const poManager = new PageObjectsManager(page);
-    const loginPage = poManager.getLoginPage();
-    const purchasePage = poManager.getPurchasePage();
-    const email = testData.email;
-    const password = testData.password;
-    const afterButtonColor = testData.afterButtonColor;
-
-    // ========== Launch to the main PCH page and Log In
-    await loginPage.launch();
-    await loginPage.signIn(email, password);
-    expect(await loginPage.signText()).toContain("Sign Out");
-
-    // ========== Enter to sweepstake for Super prize
-    await purchasePage.submitSuperPrize();
-    expect.soft(await purchasePage.isSuperPrizeComplete()).toBeTruthy;
-
-    // ========== Enter to sweepstake for all weekly prizes
-    const isOtherPrizesComplete = await purchasePage.submitOtherPrizes(afterButtonColor);
-    expect.soft(isOtherPrizesComplete).toBeTruthy;
-
+    if (await browser.isConnected()) await browser.close();
   });
+
+  test('Super Prize',
+    {
+      annotation: {
+        type: 'Super Prize Only',
+        description: 'https://pch.com',
+      }
+    },
+    async ({ page }) => {
+      const poManager = new PageObjectsManager(page);
+      const purchasePage = poManager.getPurchasePage();
+
+      // ========== Enter to sweepstake for Super prize
+      await purchasePage.submitSuperPrize();
+      expect(await purchasePage.isSuperPrizeComplete()).toBeTruthy;
+
+    });
+
+  test('Weekly Prizes',
+    {
+      annotation: {
+        type: 'All Weekly Prizes',
+        description: 'https://rewards.pch.com/weekly-grand-prize',
+      }
+    },
+    async ({ page, testData }) => {
+      const poManager = new PageObjectsManager(page);
+      const purchasePage = poManager.getPurchasePage();
+      const afterButtonColor = testData.afterButtonColor;
+
+      // ========== Enter to sweepstake for all weekly prizes
+      const isOtherPrizesComplete = await purchasePage.submitOtherPrizes(afterButtonColor);
+      expect(isOtherPrizesComplete).toBeTruthy;
+
+    });
+
+});

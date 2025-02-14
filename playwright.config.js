@@ -18,7 +18,7 @@ module.exports = defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 1 : 1,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : '50%',
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -45,6 +45,18 @@ module.exports = defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.js/,
+      use:
+      {
+        ...devices['Desktop Safari'],
+        email: process.env.EMAIL,
+        password: process.env.PASSWORD,
+        viewport: { width: 1700, height: 1200 },
+        ignoreHTTPSErrors: true
+      }
+    },
     // {
     //   name: 'chromium',
     //   use: {
@@ -71,8 +83,11 @@ module.exports = defineConfig({
         ...devices['Desktop Safari'],
         viewport: { width: 1700, height: 1200 },
         ignoreHTTPSErrors: true,
-        permissions: ['geolocation']
+        permissions: ['geolocation'],
+        env_var: process.env.ENVVAR,
+        storageState: './.auth/user.json'
       },
+      dependencies: ['setup']
     },
 
     /* Test against mobile viewports. */

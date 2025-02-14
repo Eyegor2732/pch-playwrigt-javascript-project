@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test tests/tch.spec.js --project=webkit"
+    "test": "npx playwright test tests/tch.spec.js --project=webkit --retries=2"
   },
   "keywords": [],
   "author": "",

@@ -8,7 +8,6 @@ playwright-report/
 .env
 playwright.yml
 .DS_Store
-*.spec.js
-!tch.spec.js
-PurchasePage*.js
 .github
+old
+user_*.json
