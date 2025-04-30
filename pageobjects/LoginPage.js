@@ -15,6 +15,7 @@ export class LoginPage extends BaseTest {
         this.passwordInput = page.getByPlaceholder('Verify Password');
         this.signinBtn = page.getByRole('button', { name: 'SIGN IN' });
         this.letsgoBtn = page.getByText("LET'S GO");
+        this.accountIcon = page.locator('[aria-label="account icon"]');
     }
 
     async launchWeekly(url = '/weekly-grand-prize') {
@@ -54,7 +55,7 @@ export class LoginPage extends BaseTest {
             return (await this.signinLink.textContent());
         }
         else if (await this.signoutLink.isVisible) {
-            return (await this.signoutLink.textContent());
+            return (await this.accountIcon.textContent());
         }
         else {
             return ("No Sign In/Out link");

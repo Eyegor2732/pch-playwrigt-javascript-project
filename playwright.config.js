@@ -18,9 +18,10 @@ module.exports = defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 1 : 0,
+  // retries: process.env.CI ? 1 : 3,
+  retries: 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : '50%',
+  workers: process.env.CI ? 1 : 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['html', { outputFolder: 'test-results' }],
@@ -30,7 +31,7 @@ module.exports = defineConfig({
     process.env.CI ? ['dot'] : ['list']
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  timeout: 12 * 30000,
+  timeout: 10 * 30000,
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://rewards.pch.com',
@@ -85,7 +86,7 @@ module.exports = defineConfig({
         ignoreHTTPSErrors: true,
         permissions: ['geolocation'],
         env_var: process.env.ENVVAR,
-        storageState: './.auth/user.json'
+        storageState: process.env.AUTHFILE   //'./.auth/user.json'
       },
       dependencies: ['setup']
     },

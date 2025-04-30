@@ -1,10 +1,8 @@
 import { test as setup, expect } from '@playwright/test';
 import { PageObjectsManager } from '../pageobjects/PageObjectManager.js';
-// import user from '../.auth/user.json'
-// import fs from 'fs'
 
 
-const authFile = './.auth/user.json';
+const authFile = process.env.AUTHFILE;   //'./.auth/user.json';
 
 setup('Authenticate by UI', async ({ page }, testInfo) => {
 
@@ -15,7 +13,8 @@ setup('Authenticate by UI', async ({ page }, testInfo) => {
 
     await loginPage.launch();
     await loginPage.signIn(email, password);
-    expect(await loginPage.signText()).toContain("Sign Out");
+    // expect(await loginPage.signText()).toEqual("Account Icon");
+    await expect(loginPage.accountIcon).toBeVisible();
 
     await page.context().storageState({ path: authFile });
 
